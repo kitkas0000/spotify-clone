@@ -2,9 +2,23 @@
 
 import { TbPlaylist } from "react-icons/tb";
 import { AiOutlinePlus } from "react-icons/ai";
+import useAuthModel from "@/hooks/useAuthModel";
+import { useUser } from "@/hooks/useUser";
+import useUploadModel from "@/hooks/useUploadModel";
 
 const Library = () => {
-  const onClick = () => {};
+  const authModel = useAuthModel();
+  const uploadModel = useUploadModel();
+  const { user } = useUser();
+
+  const onClick = () => {
+    if (!user) {
+      return authModel.onOpen();
+    }
+
+    return uploadModel.onOpen();
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between px-5 pt-4">

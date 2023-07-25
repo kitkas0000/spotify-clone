@@ -34,13 +34,12 @@ const AuthModel = () => {
       title="Welcome back"
       description="Login to your account"
       isOpen={isOpen}
-      onChange={() => {}}
+      onChange={onChange}
     >
       <Auth
-        theme="dark"
-        magicLink
-        providers={["google", "facebook", "apple"]}
         supabaseClient={supabaseClient}
+        providers={["google", "facebook", "apple"]}
+        magicLink
         appearance={{
           theme: ThemeSupa,
           variables: {
@@ -52,6 +51,7 @@ const AuthModel = () => {
             },
           },
         }}
+        theme="dark"
       />
     </Model>
   );
