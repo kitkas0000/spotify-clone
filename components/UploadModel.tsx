@@ -1,24 +1,26 @@
 "use client";
 
 import uniqid from "uniqid";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-import useUploadModel from "@/hooks/useUploadModel";
+import useUploadModal from "@/hooks/useUploadModel";
 import { useUser } from "@/hooks/useUser";
 
-import Model from "./Model";
+import Modal from "./Model";
 import Input from "./Input";
 import Button from "./Button";
 
-const UploadModel = () => {
+const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const uploadModel = useUploadModel();
-  const { user } = useUser();
+
+  const uploadModal = useUploadModal();
   const supabaseClient = useSupabaseClient();
+  const { user } = useUser();
+  const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
@@ -32,7 +34,7 @@ const UploadModel = () => {
   const onChange = (open: boolean) => {
     if (!open) {
       reset();
-      uploadModel.onClose();
+      uploadModal.onClose();
     }
   };
 
@@ -50,7 +52,7 @@ const UploadModel = () => {
 
       const uniqueID = uniqid();
 
-      //Upload song
+      // Upload song
       const { data: songData, error: songError } = await supabaseClient.storage
         .from("songs")
         .upload(`song-${values.title}-${uniqueID}`, songFile, {
@@ -60,10 +62,10 @@ const UploadModel = () => {
 
       if (songError) {
         setIsLoading(false);
-        return toast.error("Faled song upload.");
+        return toast.error("Failed song upload");
       }
 
-      //Upload image
+      // Upload image
       const { data: imageData, error: imageError } =
         await supabaseClient.storage
           .from("images")
@@ -74,9 +76,10 @@ const UploadModel = () => {
 
       if (imageError) {
         setIsLoading(false);
-        return toast.error("Faled image upload.");
+        return toast.error("Failed image upload");
       }
 
+      // Create record
       const { error: supabaseError } = await supabaseClient
         .from("songs")
         .insert({
@@ -88,7 +91,6 @@ const UploadModel = () => {
         });
 
       if (supabaseError) {
-        setIsLoading(false);
         return toast.error(supabaseError.message);
       }
 
@@ -96,7 +98,7 @@ const UploadModel = () => {
       setIsLoading(false);
       toast.success("Song created!");
       reset();
-      uploadModel.onClose();
+      uploadModal.onClose();
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
@@ -105,10 +107,10 @@ const UploadModel = () => {
   };
 
   return (
-    <Model
+    <Modal
       title="Add a song"
-      description="Upload mp3 file"
-      isOpen={uploadModel.isOpen}
+      description="Upload an mp3 file"
+      isOpen={uploadModal.isOpen}
       onChange={onChange}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
@@ -127,20 +129,22 @@ const UploadModel = () => {
         <div>
           <div className="pb-1">Select a song file</div>
           <Input
-            id="song"
-            type="file"
+            placeholder="test"
             disabled={isLoading}
+            type="file"
             accept=".mp3"
+            id="song"
             {...register("song", { required: true })}
           />
         </div>
         <div>
           <div className="pb-1">Select an image</div>
           <Input
-            id="image"
-            type="file"
+            placeholder="test"
             disabled={isLoading}
+            type="file"
             accept="image/*"
+            id="image"
             {...register("image", { required: true })}
           />
         </div>
@@ -148,8 +152,8 @@ const UploadModel = () => {
           Create
         </Button>
       </form>
-    </Model>
+    </Modal>
   );
 };
 
-export default UploadModel;
+export default UploadModal;
