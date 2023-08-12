@@ -4,12 +4,6 @@ Demo website: https://spotify-clone-omega-black.vercel.app/
 
 **Node version 14.x**
 
-### Cloning the repository
-
-```shell
-git clone https://github.com/AntonioErdeljac/next13-spotify.git
-```
-
 ### Install packages
 
 ```shell
