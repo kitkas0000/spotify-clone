@@ -1,19 +1,20 @@
-import Sidebar from "@/components/Sidebar";
-import "./globals.css";
-import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
-import SupabaseProvider from "@/providers/SupabaseProvider";
-import UserProvider from "@/providers/UserProvider";
-import ModelProvider from "@/providers/ModelProvider";
-import ToasterProvider from "@/providers/ToasterProvider";
+
 import getSongsByUserId from "@/actions/getSongsByUserId";
+import Sidebar from "@/components/Sidebar";
+import ToasterProvider from "@/providers/ToasterProvider";
+import UserProvider from "@/providers/UserProvider";
+import ModalProvider from "@/providers/ModelProvider";
+import SupabaseProvider from "@/providers/SupabaseProvider";
 import Player from "@/components/Player";
+
+import "./globals.css";
 
 const font = Figtree({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Spotify Clone",
-  description: "Listen to music!",
+  description: "Spotify Clone",
 };
 
 export const revalidate = 0;
@@ -31,7 +32,6 @@ export default async function RootLayout({
         <ToasterProvider />
         <SupabaseProvider>
           <UserProvider>
-            <ModelProvider />
             <Sidebar songs={userSongs}>{children}</Sidebar>
             <Player />
           </UserProvider>

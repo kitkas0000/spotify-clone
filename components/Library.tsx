@@ -2,30 +2,32 @@
 
 import { TbPlaylist } from "react-icons/tb";
 import { AiOutlinePlus } from "react-icons/ai";
-import useAuthModel from "@/hooks/useAuthModel";
-import { useUser } from "@/hooks/useUser";
-import useUploadModel from "@/hooks/useUploadModel";
+
 import { Song } from "@/types";
-import MediaItem from "./MediaItem";
+import useUploadModal from "@/hooks/useUploadModel";
+import { useUser } from "@/hooks/useUser";
+import useAuthModal from "@/hooks/useAuthModel";
 import useOnPlay from "@/hooks/useOnPlay";
+
+import MediaItem from "./MediaItem";
 
 interface LibraryProps {
   songs: Song[];
 }
 
 const Library: React.FC<LibraryProps> = ({ songs }) => {
-  const authModel = useAuthModel();
-  const uploadModel = useUploadModel();
-  const { user } = useUser();
+  const { user, subscription } = useUser();
+  const uploadModal = useUploadModal();
+  const authModal = useAuthModal();
 
   const onPlay = useOnPlay(songs);
 
   const onClick = () => {
     if (!user) {
-      return authModel.onOpen();
+      return authModal.onOpen();
     }
 
-    return uploadModel.onOpen();
+    return uploadModal.onOpen();
   };
 
   return (
@@ -38,7 +40,12 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
         <AiOutlinePlus
           onClick={onClick}
           size={20}
-          className="text-neutral-400 cursor-pointer hover:text-white transition"
+          className="
+            text-neutral-400 
+            cursor-pointer 
+            hover:text-white 
+            transition
+          "
         />
       </div>
       <div className="flex flex-col gap-y-2 mt-4 px-3">
